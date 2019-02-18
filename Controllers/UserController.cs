@@ -28,7 +28,8 @@ namespace GoalTracker.API.Controllers
         {
             if (!await _userService.FindUserAsync(userToRegister.Name))
             {
-                return Ok(await _userService.RegisterUserAsync(userToRegister));
+                await _userService.RegisterUserAsync(userToRegister);
+                return Ok();
             }
             return BadRequest("Username already exists");
         }
@@ -39,7 +40,7 @@ namespace GoalTracker.API.Controllers
             var user = await _userService.LoginUserAsync(userToLogin);
 
             if (user == null)
-                return Unauthorized();
+                return Unauthorized("Incorrect user or password");
 
             var token = _security.GenerateToken(user);
 
